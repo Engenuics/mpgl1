@@ -133,10 +133,36 @@ State Machine Function Definitions
 **********************************************************************************************************************/
 
 /*-------------------------------------------------------------------------------------------------------------------*/
-/* Wait for ??? */
 static void UserApp1SM_Idle(void)
-{
-
+{ 
+  static u32 COUNTER_LIMIT_MS=1000;
+  static u32 u32Counter = 0;
+  static bool bLightIsOn = FALSE;
+  
+  /*Increment u32Counter every 1ms cycle*/
+  u32Counter++;
+  if(COUNTER_LIMIT_MS==1)
+  {
+    HEARTBEAT_ON();
+    return;
+  }
+  /*Check and roll over*/
+  if(u32Counter == COUNTER_LIMIT_MS)
+  {
+     u32Counter = 0;
+    
+    if(bLightIsOn)
+    {
+      HEARTBEAT_OFF();
+      COUNTER_LIMIT_MS= COUNTER_LIMIT_MS/2;
+    }
+    else
+    {
+      HEARTBEAT_ON();
+    }
+    
+    bLightIsOn = !bLightIsOn;
+  }
 } /* end UserApp1SM_Idle() */
     
 #if 0
