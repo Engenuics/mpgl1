@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-File: debug.c                                                                
+File: changed_debug.c                                                                
 
 Description:
 Debugging functions and state machine.  Since the system is small, debugger commands
