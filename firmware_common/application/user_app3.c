@@ -32,18 +32,17 @@ volatile u32 G_u32UserApp3Flags;                       /* Global state flags */
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
-extern volatile u32 G_u32SystemFlags;                  /* From main.c */
-extern volatile u32 G_u32ApplicationFlags;             /* From main.c */
-
-extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
-extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
+extern volatile u32 G_u32SystemTime1ms;                /*!< From main.c */
+extern volatile u32 G_u32SystemTime1s;                 /*!< From main.c */
+extern volatile u32 G_u32SystemFlags;                  /*!< From main.c */
+extern volatile u32 G_u32ApplicationFlags;             /*!< From main.c */
 
 
 /***********************************************************************************************************************
 Global variable definitions with scope limited to this local application.
 Variable names shall start with "UserApp3_" and be declared as static.
 ***********************************************************************************************************************/
-static fnCode_type UserApp3_StateMachine;            /* The state machine function pointer */
+static fnCode_type UserApp3_StateMachine;              /* The state machine function pointer */
 //static u32 UserApp3_u32Timeout;                      /* Timeout counter used across states */
 
 

@@ -1,8 +1,6 @@
-/***********************************************************************************************************************
-* File: eief1-pcb-01.h                                                                
-* 
-* Description:
-* This file provides header information for the eief1-pcb-01 board.
+/*!**********************************************************************************************************************
+@file eief1-pcb-01.h                                                                
+@brief This file provides header information for the eief1-pcb-01 board.
 ***********************************************************************************************************************/
 
 #ifndef __EIEF1
@@ -16,58 +14,53 @@ Type Definitions
 /***********************************************************************************************************************
 * Constants
 ***********************************************************************************************************************/
-#define OSC_VALUE                 (u32)12000000
-#define MAINCK                    OSC_VALUE
-#define MULA                      (u32)7
-#define DIVA                      (u32)1
-#define PLLACK_VALUE              (u32)(MAINCK * (MULA + 1)) / DIVA         /* 96 MHz */
-#define CPU_DIVIDER               (u32)2
-#define CCLK_VALUE                PLLACK_VALUE / CPU_DIVIDER                /* 48 MHz */
-#define MCK                       CCLK_VALUE
-#define PERIPHERAL_DIVIDER        (u32)1
-#define PCLK_VALUE                CCLK_VALUE / PERIPHERAL_DIVIDER           /* 48 MHz */
-#define SYSTICK_DIVIDER           (u32)8
+#define OSC_VALUE                 (u32)12000000                              /*!< @brief Crystal oscillator value */
+#define MAINCK                    OSC_VALUE                                  /*!< @brief Main clock is base crystal frequency */
+#define MULA                      (u32)7                                     /*!< @brief PLL multiplier */
+#define DIVA                      (u32)1                                     /*!< @brief PLL divider value */
+#define PLLACK_VALUE              (u32)(MAINCK * (MULA + 1)) / DIVA          /*!< @brief PLL scaled clock is 96 MHz */
+#define CPU_DIVIDER               (u32)2                                     /*!< @brief Divider to get CPU clock */
+#define CCLK_VALUE                PLLACK_VALUE / CPU_DIVIDER                 /*!< @brief CPU clock 48 MHz */
+#define MCK                       CCLK_VALUE                                 /*!< @brief Alternate name for CPU clock 48 MHz */
+#define PERIPHERAL_DIVIDER        (u32)1                                     /*!< @brief Peripheral clock divider */
+#define PCLK_VALUE                CCLK_VALUE / PERIPHERAL_DIVIDER            /*!< @brief Peripheral clock 48 MHz */
+#define SYSTICK_DIVIDER           (u32)8                                     /*!< @brief System tick scaling value */
+#define SLCK                      (u32)32000                                 /*!< @brief Nominal value of internal RC */
 
-
-#define SYSTICK_COUNT             (u32)(0.001 * (CCLK_VALUE / SYSTICK_DIVIDER) )
-/* To get 1 ms tick, need SYSTICK_COUNT to be 0.001 * SysTick Clock.  
+/*!@brief To get 1 ms tick, need SYSTICK_COUNT to be 0.001 * SysTick Clock.  
 Should be 6000 for 48MHz CCLK. */
-
-#define RTC_INT_TIME              (u16)2            /* Half-seconds for RTC interrupt */
-#define RTC_STOP_INT_TIME         (u16)2            /* Half-seconds for RTC interrupt */
-
-#define OSC_STARTUP_TIMOUT        (u32)1000000      /* Timeout for oscillator to start up */
-#define PLL_LOCK_TIMEOUT          (u32)4000000      /* Timeout for PLL0 to lock */
+#define SYSTICK_COUNT             (u32)(0.001 * (CCLK_VALUE / SYSTICK_DIVIDER) )
 
 
 /***********************************************************************************************************************
 * Macros
 ***********************************************************************************************************************/
-#define WATCHDOG_BONE()     (AT91C_BASE_WDTC->WDTC_WDCR = WDT_CR_FEED)    /* Resets the watch dog countdown timer*/
-#define HEARTBEAT_ON()      (AT91C_BASE_PIOA->PIO_CODR = PA_31_HEARTBEAT) /* Turns on Heartbeat LED */
-#define HEARTBEAT_OFF()     (AT91C_BASE_PIOA->PIO_SODR = PA_31_HEARTBEAT) /* Turns off Heartbeat LED */
+#define WATCHDOG_BONE()     (AT91C_BASE_WDTC->WDTC_WDCR = WDT_CR_FEED)       /*!< @brief Resets the watch dog countdown timer*/
+#define HEARTBEAT_ON()      (AT91C_BASE_PIOA->PIO_CODR = PA_31_HEARTBEAT)    /*!< @brief Turns on Heartbeat LED */
+#define HEARTBEAT_OFF()     (AT91C_BASE_PIOA->PIO_SODR = PA_31_HEARTBEAT)    /*!< @brief Turns off Heartbeat LED */
 
-#define SD_CARD_INSERTED()  (!(AT91C_BASE_PIOA->PIO_PDSR & PA_02_SD_DETECT))   /* SD detect switch asserted */
+#define SD_CARD_INSERTED()  (!(AT91C_BASE_PIOA->PIO_PDSR & PA_02_SD_DETECT)) /*!< @brief SD detect switch asserted */
 
 
 /***********************************************************************************************************************
 * Function Declarations
 ***********************************************************************************************************************/
 
-/*--------------------------------------------------------------------------------------------------------------------*/
-/* Public Functions */
+/*------------------------------------------------------------------------------------------------------------------*/
+/*! @publicsection */                                                                                            
 /*--------------------------------------------------------------------------------------------------------------------*/
 void PWMAudioSetFrequency(u32 u32Channel_, u16 u16Frequency_);
 void PWMAudioOn(u32 u32Channel_);
 void PWMAudioOff(u32 u32Channel_);
 
 
-/*--------------------------------------------------------------------------------------------------------------------*/
-/* Protected Functions */
+/*------------------------------------------------------------------------------------------------------------------*/
+/*! @protectedsection */                                                                                            
 /*--------------------------------------------------------------------------------------------------------------------*/
 void ClockSetup(void);
 void RealTimeClockSetup(void);
 void SysTickSetup(void);
+void SystemTimeCheck(void);
 void SystemSleep(void);
 void WatchDogSetup(void);
 void GpioSetup(void);
@@ -75,6 +68,87 @@ void GpioSetup(void);
 void PWMSetupAudio(void);
 
 
+/***********************************************************************************************************************
+!!!!! GPIO pin names
+***********************************************************************************************************************/
+/* Hardware Definition for PCB EIEF1-PCB-01 */
+
+/* Port A bit positions */
+#define PA_31_HEARTBEAT         (u32)0x80000000
+#define PA_30_AN_DEMO           (u32)0x40000000
+#define PA_29_BUZZER2           (u32)0x20000000
+#define PA_28_BUZZER1           (u32)0x10000000
+#define PA_27_CLOCK_OUT         (u32)0x08000000
+#define PA_26_ANT_PWR_EN        (u32)0x04000000 
+#define PA_25_ANT_USPI2_SCK     (u32)0x02000000
+#define PA_24_SD_USPI1_SCK      (u32)0x01000000
+#define PA_23_ANT_USPI2_MOSI    (u32)0x00800000
+#define PA_22_ANT_USPI2_MISO    (u32)0x00400000 
+#define PA_21_SD_USPI1_MISO     (u32)0x00200000
+#define PA_20_SD_USPI1_MOSI     (u32)0x00100000
+#define PA_19_DEBUG_U0_PIMO     (u32)0x00080000
+#define PA_18_DEBUG_U0_POMI     (u32)0x00040000
+#define PA_17_BUTTON0           (u32)0x00020000
+#define PA_16_BLADE_CS          (u32)0x00010000
+#define PA_15_BLADE_SCK         (u32)0x00008000
+#define PA_14_BLADE_MOSI        (u32)0x00004000
+#define PA_13_BLADE_MISO        (u32)0x00002000
+#define PA_12_BLADE_UPOMI       (u32)0x00001000
+#define PA_11_BLADE_UPIMO       (u32)0x00000800
+#define PA_10_I2C_SCL           (u32)0x00000400
+#define PA_09_I2C_SDA           (u32)0x00000200
+#define PA_08_SD_CS_MCDA3       (u32)0x00000100
+#define PA_07_HSMCI_MCDA2       (u32)0x00000080
+#define PA_06_HSMCI_MCDA1       (u32)0x00000040
+#define PA_05_HSMCI_MCDA0       (u32)0x00000020
+#define PA_04_HSMCI_MCCDA       (u32)0x00000010
+#define PA_03_HSMCI_MCCK        (u32)0x00000008
+#define PA_02_SD_DETECT         (u32)0x00000004
+#define PA_01_SD_WP             (u32)0x00000002 
+#define PA_00_TP54              (u32)0x00000001 
+
+
+/* Port B bit positions */
+#define PB_31_                  (u32)0x80000000
+#define PB_30_                  (u32)0x40000000
+#define PB_29_                  (u32)0x20000000
+#define PB_28_                  (u32)0x10000000
+#define PB_27_                  (u32)0x08000000
+#define PB_26_                  (u32)0x04000000
+#define PB_25_                  (u32)0x02000000
+#define PB_24_ANT_SRDY          (u32)0x01000000
+#define PB_23_ANT_MRDY          (u32)0x00800000
+#define PB_22_ANT_USPI2_CS      (u32)0x00400000
+#define PB_21_ANT_RESET         (u32)0x00200000
+#define PB_20_LED_RED           (u32)0x00100000
+#define PB_19_LED_GRN           (u32)0x00080000
+#define PB_18_LED_BLU           (u32)0x00040000
+#define PB_17_LED_YLW           (u32)0x00020000
+#define PB_16_LED_CYN           (u32)0x00010000
+#define PB_15_LED_ORG           (u32)0x00008000
+#define PB_14_LED_PRP           (u32)0x00004000
+#define PB_13_LED_WHT           (u32)0x00002000
+#define PB_12_LCD_BL_BLU        (u32)0x00001000
+#define PB_11_LCD_BL_GRN        (u32)0x00000800
+#define PB_10_LCD_BL_RED        (u32)0x00000400
+#define PB_09_LCD_RST           (u32)0x00000200
+#define PB_08_TP62              (u32)0x00000100 
+#define PB_07_TP60              (u32)0x00000080
+#define PB_06_TP58              (u32)0x00000040
+#define PB_05_TP56              (u32)0x00000020
+#define PB_04_BLADE_AN1         (u32)0x00000010
+#define PB_03_BLADE_AN0         (u32)0x00000008
+#define PB_02_BUTTON3           (u32)0x00000004
+#define PB_01_BUTTON2           (u32)0x00000002
+#define PB_00_BUTTON1           (u32)0x00000001
+
+
+#define ADC12_POTENTIOMETER     ADC12_CH1
+#define ADC12_BLADE_AN0         ADC12_CH2
+#define ADC12_BLADE_AN1         ADC12_CH3
+      
+
+/*! @cond DOXYGEN_EXCLUDE */
 /***********************************************************************************************************************
 Perihperal Setup Initializations
 
@@ -310,7 +384,8 @@ Since we want PLLACK at 96 MHz:
 
 
 /* Watch Dog Values
-The watchdog oscillator is on the internal 32k RC with a 128 prescaler = 3.9ms / tick.  For a minimum 5 second watchdog timeout, the watchdog
+The watchdog oscillator is on the internal 32k RC with a 128 prescaler = 3.9ms / tick.  
+For a minimum 5 second watchdog timeout, the watchdog
 counter must be set at 1280. */
 
 #define WDT_CR_FEED  (u32)0xA5000001
@@ -377,86 +452,6 @@ counter must be set at 1280. */
     00 [0] "
 */
 
-
-/***********************************************************************************************************************
-!!!!! GPIO pin names
-***********************************************************************************************************************/
-/* Hardware Definition for PCB EIEF1-PCB-01 */
-
-/* Port A bit positions */
-#define PA_31_HEARTBEAT          (u32)0x80000000
-#define PA_30_AN_DEMO            (u32)0x40000000
-#define PA_29_BUZZER2            (u32)0x20000000
-#define PA_28_BUZZER1            (u32)0x10000000
-#define PA_27_CLOCK_OUT          (u32)0x08000000
-#define PA_26_ANT_PWR_EN         (u32)0x04000000 
-#define PA_25_ANT_USPI2_SCK      (u32)0x02000000
-#define PA_24_SD_USPI1_SCK       (u32)0x01000000
-#define PA_23_ANT_USPI2_MOSI     (u32)0x00800000
-#define PA_22_ANT_USPI2_MISO     (u32)0x00400000 
-#define PA_21_SD_USPI1_MISO      (u32)0x00200000
-#define PA_20_SD_USPI1_MOSI      (u32)0x00100000
-#define PA_19_DEBUG_U0_PIMO      (u32)0x00080000
-#define PA_18_DEBUG_U0_POMI      (u32)0x00040000
-#define PA_17_BUTTON0            (u32)0x00020000
-#define PA_16_BLADE_CS           (u32)0x00010000
-#define PA_15_BLADE_SCK          (u32)0x00008000
-#define PA_14_BLADE_MOSI         (u32)0x00004000
-#define PA_13_BLADE_MISO         (u32)0x00002000
-#define PA_12_BLADE_UPOMI        (u32)0x00001000
-#define PA_11_BLADE_UPIMO        (u32)0x00000800
-#define PA_10_I2C_SCL            (u32)0x00000400
-#define PA_09_I2C_SDA            (u32)0x00000200
-#define PA_08_SD_CS_MCDA3        (u32)0x00000100
-#define PA_07_HSMCI_MCDA2        (u32)0x00000080
-#define PA_06_HSMCI_MCDA1        (u32)0x00000040
-#define PA_05_HSMCI_MCDA0        (u32)0x00000020
-#define PA_04_HSMCI_MCCDA        (u32)0x00000010
-#define PA_03_HSMCI_MCCK         (u32)0x00000008
-#define PA_02_SD_DETECT          (u32)0x00000004
-#define PA_01_SD_WP              (u32)0x00000002 
-#define PA_00_TP54               (u32)0x00000001 
-
-
-/* Port B bit positions */
-#define PB_31_                  (u32)0x80000000
-#define PB_30_                  (u32)0x40000000
-#define PB_29_                  (u32)0x20000000
-#define PB_28_                  (u32)0x10000000
-#define PB_27_                  (u32)0x08000000
-#define PB_26_                  (u32)0x04000000
-#define PB_25_                  (u32)0x02000000
-#define PB_24_ANT_SRDY          (u32)0x01000000
-#define PB_23_ANT_MRDY          (u32)0x00800000
-#define PB_22_ANT_USPI2_CS      (u32)0x00400000
-#define PB_21_ANT_RESET         (u32)0x00200000
-#define PB_20_LED_RED           (u32)0x00100000
-#define PB_19_LED_GRN           (u32)0x00080000
-#define PB_18_LED_BLU           (u32)0x00040000
-#define PB_17_LED_YLW           (u32)0x00020000
-#define PB_16_LED_CYN           (u32)0x00010000
-#define PB_15_LED_ORG           (u32)0x00008000
-#define PB_14_LED_PRP           (u32)0x00004000
-#define PB_13_LED_WHT           (u32)0x00002000
-#define PB_12_LCD_BL_BLU        (u32)0x00001000
-#define PB_11_LCD_BL_GRN        (u32)0x00000800
-#define PB_10_LCD_BL_RED        (u32)0x00000400
-#define PB_09_LCD_RST           (u32)0x00000200
-#define PB_08_TP62              (u32)0x00000100 
-#define PB_07_TP60              (u32)0x00000080
-#define PB_06_TP58              (u32)0x00000040
-#define PB_05_TP56              (u32)0x00000020
-#define PB_04_BLADE_AN1         (u32)0x00000010
-#define PB_03_BLADE_AN0         (u32)0x00000008
-#define PB_02_BUTTON3           (u32)0x00000004
-#define PB_01_BUTTON2           (u32)0x00000002
-#define PB_00_BUTTON1           (u32)0x00000001
-
-
-#define ADC12_POTENTIOMETER     ADC12_CH1
-#define ADC12_BLADE_AN0         ADC12_CH2
-#define ADC12_BLADE_AN1         ADC12_CH3
-      
 
 /***********************************************************************************************************************
 ##### GPIO setup values
@@ -552,97 +547,6 @@ counter must be set at 1280. */
     00 [1] PB_00_BUTTON1 PIO control enabled
 */
 
-
-/* PIO Disable Register: 
-0: No effect
-1: Pin is controlled by corresponding peripheral
-*/
-#define PIOA_PDR_INIT (u32)0x7BFCFFF8
-/* 
-    31 [0] PA_31_HEARTBEAT not controlled by peripheral
-    30 [1] PA_30_AN_DEMO controlled by peripheral
-    29 [1] PA_29_BUZZER2 controlled by peripheral
-    28 [1] PA_28_BUZZER1 controlled by peripheral
-
-    27 [1] PA_27_CLOCK_OUT controlled by peripheral
-    26 [0] PA_26_ANT_PWR_EN not controlled by peripheral
-    25 [1] PA_25_ANT_USPI2_SCK controlled by peripheral
-    24 [1] PA_24_SD_USPI1_SCK controlled by peripheral
-
-    23 [1] PA_23_ANT_USPI2_MOSI controlled by peripheral
-    22 [1] PA_22_ANT_USPI2_MISO controlled by peripheral
-    21 [1] PA_21_SD_USPI1_MISO controlled by peripheral
-    20 [1] PA_20_SD_USPI1_MOSI controlled by peripheral
-
-    19 [1] PA_19_DEBUG_U0_PIMO controlled by peripheral
-    18 [1] PA_18_DEBUG_U0_POMI controlled by peripheral
-    17 [0] PA_17_BUTTON0 not controlled by peripheral
-    16 [0] PA_16_BLADE_CS not controlled by peripheral
-
-    15 [1] PA_15_BLADE_SCK controlled by peripheral
-    14 [1] PA_14_BLADE_MOSI controlled by peripheral
-    13 [1] PA_13_BLADE_MISO controlled by peripheral
-    12 [1] PA_12_BLADE_UPOMI controlled by peripheral
-
-    11 [1] PA_11_BLADE_UPIMO controlled by peripheral
-    10 [1] PA_10_I2C_SCL controlled by peripheral
-    09 [1] PA_09_I2C_SDA controlled by peripheral
-    08 [1] PA_08_SD_CS_MCDA3 controlled by peripheral
-
-    07 [1] PA_07_HSMCI_MCDA2 controlled by peripheral
-    06 [1] PA_06_HSMCI_MCDA1 controlled by peripheral
-    05 [1] PA_05_HSMCI_MCDA0 controlled by peripheral
-    04 [1] PA_04_HSMCI_MCCDA controlled by peripheral
-
-    03 [1] PA_03_HSMCI_MCCK controlled by peripheral
-    02 [0] PA_02_SD_DETECT not controlled by peripheral
-    01 [0] PA_01_SD_WP not controlled by peripheral
-    00 [0] PA_00_TP54 not controlled by peripheral
-*/
-
-#define PIOB_PDR_INIT (u32)0x00400058
-/*
-    31 [0] PB_31_ 
-    30 [0] PB_30_ 
-    29 [0] PB_29_ 
-    28 [0] PB_28_ 
-
-    27 [0] PB_27_ 
-    26 [0] PB_26_ 
-    25 [0] PB_25_ 
-    24 [0] PB_24_ANT_SRDY not controlled by peripheral
-
-    23 [0] PB_23_ANT_MRDY not controlled by peripheral
-    22 [1] PB_22_ANT_USPI2_CS controlled by peripheral
-    21 [0] PB_21_ANT_RESET not controlled by peripheral
-    20 [0] PB_20_LED_RED not controlled by peripheral
-
-    19 [0] PB_19_LED_GRN not controlled by peripheral
-    18 [0] PB_18_LED_BLU not controlled by peripheral
-    17 [0] PB_17_LED_YLW not controlled by peripheral
-    16 [0] PB_16_LED_CYN not controlled by peripheral
-
-    15 [0] PB_15_LED_ORG not controlled by peripheral
-    14 [0] PB_14_LED_PRP not controlled by peripheral
-    13 [0] PB_13_LED_WHT not controlled by peripheral
-    12 [0] PB_12_LCD_BL_BLU not controlled by peripheral
-
-    11 [0] PB_11_LCD_BL_GRN not controlled by peripheral
-    10 [0] PB_10_LCD_BL_RED not controlled by peripheral
-    09 [0] PB_09_LCD_RST not controlled by peripheral
-    08 [0] PB_08_TP62 not controlled by peripheral
-
-    07 [0] PB_07_TP60 not controlled by peripheral
-    06 [1] PB_06_TP58 controlled by peripheral
-    05 [0] PB_05_TP56 not controlled by peripheral
-    04 [1] PB_04_BLADE_AN1 controlled by peripheral
-
-    03 [1] PB_03_BLADE_AN0 controlled by peripheral
-    02 [0] PB_02_BUTTON3 not controlled by peripheral
-    01 [0] PB_01_BUTTON2 not controlled by peripheral
-    00 [0] PB_00_BUTTON1 not controlled by peripheral
-*/
-
 /* PIO Controller Output Enable Register
 Configures the pin as an output or input.
 0: No effect
@@ -732,96 +636,6 @@ Configures the pin as an output or input.
     02 [0] PB_02_BUTTON3 input
     01 [0] PB_01_BUTTON2 input
     00 [0] PB_00_BUTTON1 input
-*/
-
-/* PIO Controller Output Disable Register
-0: No effect
-1: Disables the output on the I/O line.
-*/
-#define PIOA_ODR_INIT (u32)0x40AA2806
-/* 
-    31 [0] PA_31_HEARTBEAT output 
-    30 [1] PA_30_AN_DEMO input
-    29 [0] PA_29_BUZZER2 output 
-    28 [0] PA_28_BUZZER1 output 
-
-    27 [0] PA_27_CLOCK_OUT output 
-    26 [0] PA_26_ANT_PWR_EN output 
-    25 [0] PA_25_ANT_USPI2_SCK output 
-    24 [0] PA_24_SD_USPI1_SCK output 
-
-    23 [1] PA_23_ANT_USPI2_MOSI input
-    22 [0] PA_22_ANT_USPI2_MISO output 
-    21 [1] PA_21_SD_USPI1_MISO input 
-    20 [0] PA_20_SD_USPI1_MOSI output 
-
-    19 [1] PA_19_DEBUG_U0_PIMO input
-    18 [0] PA_18_DEBUG_U0_POMI output 
-    17 [1] PA_17_BUTTON0 input
-    16 [0] PA_16_BLADE_CS output 
-
-    15 [0] PA_15_BLADE_SCK output 
-    14 [0] PA_14_BLADE_MOSI output 
-    13 [1] PA_13_BLADE_MISO input
-    12 [0] PA_12_BLADE_UPOMI output 
-
-    11 [1] PA_11_BLADE_UPIMO input
-    10 [0] PA_10_I2C_SCL output 
-    09 [0] PA_09_I2C_SDA output 
-    08 [0] PA_08_SD_CS_MCDA3 output 
-
-    07 [0] PA_07_HSMCI_MCDA2 output 
-    06 [0] PA_06_HSMCI_MCDA1 output 
-    05 [0] PA_05_HSMCI_MCDA0 output 
-    04 [0] PA_04_HSMCI_MCCDA output 
-
-    03 [0] PA_03_HSMCI_MCCK output 
-    02 [1] PA_02_SD_DETECT input
-    01 [1] PA_01_SD_WP input
-    00 [0] PA_00_TP54 output 
-*/
-
-#define PIOB_ODR_INIT (u32)0x0040001F
-/*
-    31 [0] PB_31_
-    30 [0] PB_30_
-    29 [0] PB_29_
-    28 [0] PB_28_
-
-    27 [0] PB_27_
-    26 [0] PB_26_
-    25 [0] PB_25_
-    24 [0] PB_24_ANT_SRDY output
-
-    23 [0] PB_23_ANT_MRDY output
-    22 [1] PB_22_ANT_USPI2_CS input
-    21 [0] PB_21_ANT_RESET output 
-    20 [0] PB_20_LED_RED output 
-
-    19 [0] PB_19_LED_GRN output 
-    18 [0] PB_18_LED_BLU output 
-    17 [0] PB_17_LED_YLW output 
-    16 [0] PB_16_LED_CYN output 
-
-    15 [0] PB_15_LED_ORG output 
-    14 [0] PB_14_LED_PRP output 
-    13 [0] PB_13_LED_WHT output 
-    12 [0] PB_12_LCD_BL_BLU output 
-
-    11 [0] PB_11_LCD_BL_GRN output 
-    10 [0] PB_10_LCD_BL_RED output 
-    09 [0] PB_09_LCD_RST output 
-    08 [0] PB_08_TP62 output 
-
-    07 [0] PB_07_TP60 output 
-    06 [0] PB_06_TP58 output 
-    05 [0] PB_05_TP56 output 
-    04 [1] PB_04_BLADE_AN1 input
-
-    03 [1] PB_03_BLADE_AN0 input
-    02 [1] PB_02_BUTTON3 input
-    01 [1] PB_01_BUTTON2 input
-    00 [1] PB_00_BUTTON1 input
 */
 
 /* PIO Controller Input Filter Enable Register
@@ -914,95 +728,6 @@ Configures the pin as an output or input.
     00 [0] PB_00_BUTTON1 no glitch filter
 */
 
-/* PIO Controller Input Filter Disable Register
-0: No effect
-1: Disables the input glitch filter on the I/O line.
-*/
-#define PIOA_IFDR_INIT (u32)0x00000000
-/* 
-    31 [0] PA_31_HEARTBEAT no input filter
-    30 [0] PA_30_AN_DEMO no input filter
-    29 [0] PA_29_BUZZER2 no input filter
-    28 [0] PA_28_BUZZER1 no input filter
-
-    27 [0] PA_27_CLOCK_OUT no input filter
-    26 [0] PA_26_ANT_PWR_EN no input filter
-    25 [0] PA_25_ANT_USPI2_SCK no input filter
-    24 [0] PA_24_SD_USPI1_SCK no input filter
-
-    23 [0] PA_23_ANT_USPI2_MOSI no input filter
-    22 [0] PA_22_ANT_USPI2_MISO no input filter
-    21 [0] PA_21_SD_USPI1_MISO no input filter
-    20 [0] PA_20_SD_USPI1_MOSI no input filter
-
-    19 [0] PA_19_DEBUG_U0_PIMO no input filter
-    18 [0] PA_18_DEBUG_U0_POMI no input filter
-    17 [0] PA_17_BUTTON0 no input filter
-    16 [0] PA_16_BLADE_CS no input filter
-
-    15 [0] PA_15_BLADE_SCK no input filter
-    14 [0] PA_14_BLADE_MOSI no input filter
-    13 [0] PA_13_BLADE_MISO no input filter
-    12 [0] PA_12_BLADE_UPOMI no input filter
-
-    11 [0] PA_11_BLADE_UPIMO no input filter
-    10 [0] PA_10_I2C_SCL no input filter
-    09 [0] PA_09_I2C_SDA no input filter
-    08 [0] PA_08_SD_CS_MCDA3 no input filter
-
-    07 [0] PA_07_HSMCI_MCDA2 no input filter
-    06 [0] PA_06_HSMCI_MCDA1 no input filter
-    05 [0] PA_05_HSMCI_MCDA0 no input filter
-    04 [0] PA_04_HSMCI_MCCDA no input filter
-
-    03 [0] PA_03_HSMCI_MCCK no input filter
-    02 [0] PA_02_SD_DETECT no input filter
-    01 [0] PA_01_SD_WP no input filter
-    00 [0] PA_00_TP54 no input filter
-*/
-
-#define PIOB_IFDR_INIT (u32)0x00000000
-/*
-    31 [0] PB_31_
-    30 [0] PB_30_
-    29 [0] PB_29_
-    28 [0] PB_28_
-
-    27 [0] PB_27_
-    26 [0] PB_26_
-    25 [0] PB_25_
-    24 [0] PB_24_ANT_SRDY no input filter
-
-    23 [0] PB_23_ANT_MRDY no input filter
-    22 [0] PB_22_ANT_USPI2_CS no input filter
-    21 [0] PB_21_ANT_RESET no input filter
-    20 [0] PB_20_LED_RED no input filter
-
-    19 [0] PB_19_LED_GRN no input filter
-    18 [0] PB_18_LED_BLU no input filter
-    17 [0] PB_17_LED_YLW no input filter
-    16 [0] PB_16_LED_CYN no input filter
-
-    15 [0] PB_15_LED_ORG no input filter
-    14 [0] PB_14_LED_PRP no input filter
-    13 [0] PB_13_LED_WHT no input filter
-    12 [0] PB_12_LCD_BL_BLU no input filter
-
-    11 [0] PB_11_LCD_BL_GRN no input filter
-    10 [0] PB_10_LCD_BL_RED no input filter
-    09 [0] PB_09_LCD_RST no input filter
-    08 [0] PB_08_TP62 no input filter
-
-    07 [0] PB_07_TP60 no input filter
-    06 [0] PB_06_TP58 no input filter
-    05 [0] PB_05_TP56 no input filter
-    04 [0] PB_04_BLADE_AN1 no input filter
-
-    03 [0] PB_03_BLADE_AN0 no input filter
-    02 [0] PB_02_BUTTON3 no input filter
-    01 [0] PB_01_BUTTON2 no input filter
-    00 [0] PB_00_BUTTON1 no input filter
-*/
 
 /* PIO Controller Set Output Data Register
 Default start-up IO values are held here.
@@ -1274,186 +999,6 @@ Initial output values are stored here.
     02 [0] PB_02_BUTTON3
     01 [0] PB_01_BUTTON2
     00 [0] PB_00_BUTTON1
-*/
-
-/* PIO Multi-driver Disable Register
-0: No effect
-1: Disables Multi Drive on the I/O line.
-*/
-#define PIOA_MDDR_INIT (u32)0xFBFFF9FF
-/* 
-    31 [1] PA_31_HEARTBEAT not open drain
-    30 [1] PA_30_AN_DEMO not open drain
-    29 [1] PA_29_BUZZER2 not open drain
-    28 [1] PA_28_BUZZER1 not open drain
-
-    27 [1] PA_27_CLOCK_OUT not open drain
-    26 [0] PA_26_ANT_PWR_EN
-    25 [1] PA_25_ANT_USPI2_SCK not open drain
-    24 [1] PA_24_SD_USPI1_SCK not open drain
-
-    23 [1] PA_23_ANT_USPI2_MOSI not open drain
-    22 [1] PA_22_ANT_USPI2_MISO not open drain
-    21 [1] PA_21_SD_USPI1_MISO not open drain
-    20 [1] PA_20_SD_USPI1_MOSI not open drain
-
-    19 [1] PA_19_DEBUG_U0_PIMO not open drain
-    18 [1] PA_18_DEBUG_U0_POMI not open drain
-    17 [1] PA_17_BUTTON0 not open drain
-    16 [1] PA_16_BLADE_CS not open drain
-
-    15 [1] PA_15_BLADE_SCK not open drain
-    14 [1] PA_14_BLADE_MOSI not open drain
-    13 [1] PA_13_BLADE_MISO not open drain
-    12 [1] PA_12_BLADE_UPOMI not open drain
-
-    11 [1] PA_11_BLADE_UPIMO not open drain
-    10 [0] PA_10_I2C_SCL
-    09 [0] PA_09_I2C_SDA
-    08 [1] PA_08_SD_CS_MCDA3 not open drain
-
-    07 [1] PA_07_HSMCI_MCDA2 not open drain
-    06 [1] PA_06_HSMCI_MCDA1 not open drain
-    05 [1] PA_05_HSMCI_MCDA0 not open drain
-    04 [1] PA_04_HSMCI_MCCDA not open drain
-
-    03 [1] PA_03_HSMCI_MCCK not open drain
-    02 [1] PA_02_SD_DETECT not open drain
-    01 [1] PA_01_SD_WP not open drain
-    00 [1] PA_00_TP54 not open drain
-*/
-
-#define PIOB_MDDR_INIT (u32)0x01FFFFFF
-/*
-    31 [0] PB_31_
-    30 [0] PB_30_
-    29 [0] PB_29_
-    28 [0] PB_28_
-
-    27 [0] PB_27_
-    26 [0] PB_26_
-    25 [0] PB_25_
-    24 [1] PB_24_ANT_SRDY not open drain
-
-    23 [1] PB_23_ANT_MRDY not open drain
-    22 [1] PB_22_ANT_USPI2_CS not open drain
-    21 [1] PB_21_ANT_RESET not open drain
-    20 [1] PB_20_LED_RED not open drain
-
-    19 [1] PB_19_LED_GRN not open drain
-    18 [1] PB_18_LED_BLU not open drain
-    17 [1] PB_17_LED_YLW not open drain
-    16 [1] PB_16_LED_CYN not open drain
-
-    15 [1] PB_15_LED_ORG not open drain
-    14 [1] PB_14_LED_PRP not open drain
-    13 [1] PB_13_LED_WHT not open drain
-    12 [1] PB_12_LCD_BL_BLU not open drain
-
-    11 [1] PB_11_LCD_BL_GRN not open drain
-    10 [1] PB_10_LCD_BL_RED not open drain
-    09 [1] PB_09_LCD_RST not open drain
-    08 [1] PB_08_TP62 not open drain
-
-    07 [1] PB_07_TP60 not open drain
-    06 [1] PB_06_TP58 not open drain
-    05 [1] PB_05_TP56 not open drain
-    04 [1] PB_04_BLADE_AN1 not open drain
-
-    03 [1] PB_03_BLADE_AN0 not open drain
-    02 [1] PB_02_BUTTON3 not open drain
-    01 [1] PB_01_BUTTON2 not open drain
-    00 [1] PB_00_BUTTON1 not open drain
-*/
-
-/* PIO Pull Up Disable Register
-0: No effect
-1: Disables the pull up resistor on the I/O line.
-*/
-#define PIOA_PPUDR_INIT (u32)0xFFFFFFFE
-/* 
-    31 [1] PA_31_HEARTBEAT no pull-up
-    30 [1] PA_30_AN_DEMO no pull-up
-    29 [1] PA_29_BUZZER2 no pull-up
-    28 [1] PA_28_BUZZER1 no pull-up
-
-    27 [1] PA_27_CLOCK_OUT no pull-up
-    26 [1] PA_26_ANT_PWR_EN no pull-up
-    25 [1] PA_25_ANT_USPI2_SCK no pull-up
-    24 [1] PA_24_SD_USPI1_SCK no pull-up
-
-    23 [1] PA_23_ANT_USPI2_MOSI no pull-up
-    22 [1] PA_22_ANT_USPI2_MISO no pull-up
-    21 [1] PA_21_SD_USPI1_MISO no pull-up
-    20 [1] PA_20_SD_USPI1_MOSI no pull-up
-
-    19 [1] PA_19_DEBUG_U0_PIMO no pull-up
-    18 [1] PA_18_DEBUG_U0_POMI no pull-up
-    17 [1] PA_17_BUTTON0 no pull-up
-    16 [1] PA_16_BLADE_CS no pull-up
-
-    15 [1] PA_15_BLADE_SCK no pull-up
-    14 [1] PA_14_BLADE_MOSI no pull-up
-    13 [1] PA_13_BLADE_MISO no pull-up
-    12 [1] PA_12_BLADE_UPOMI no pull-up
-
-    11 [1] PA_11_BLADE_UPIMO no pull-up
-    10 [1] PA_10_I2C_SCL no pull-up
-    09 [1] PA_09_I2C_SDA no pull-up
-    08 [1] PA_08_SD_CS_MCDA3 no pull-up
-
-    07 [1] PA_07_HSMCI_MCDA2 no pull-up
-    06 [1] PA_06_HSMCI_MCDA1 no pull-up
-    05 [1] PA_05_HSMCI_MCDA0 no pull-up
-    04 [1] PA_04_HSMCI_MCCDA no pull-up
-
-    03 [1] PA_03_HSMCI_MCCK no pull-up
-    02 [1] PA_02_SD_DETECT no pull-up
-    01 [1] PA_01_SD_WP no pull-up
-    00 [0] PA_00_TP54 pull-up enabled
-*/
-
-#define PIOB_PPUDR_INIT (u32)0x01FFFE5F
-/*
-    31 [0] PB_31_
-    30 [0] PB_30_
-    29 [0] PB_29_
-    28 [0] PB_28_
-
-    27 [0] PB_27_
-    26 [0] PB_26_
-    25 [0] PB_25_
-    24 [1] PB_24_ANT_SRDY no pull-up
-
-    23 [1] PB_23_ANT_MRDY no pull-up
-    22 [1] PB_22_ANT_USPI2_CS no pull-up
-    21 [1] PB_21_ANT_RESET no pull-up
-    20 [1] PB_20_LED_RED no pull-up
-
-    19 [1] PB_19_LED_GRN no pull-up
-    18 [1] PB_18_LED_BLU no pull-up
-    17 [1] PB_17_LED_YLW no pull-up
-    16 [1] PB_16_LED_CYN no pull-up
-
-    15 [1] PB_15_LED_ORG no pull-up
-    14 [1] PB_14_LED_PRP no pull-up
-    13 [1] PB_13_LED_WHT no pull-up
-    12 [1] PB_12_LCD_BL_BLU no pull-up
-
-    11 [1] PB_11_LCD_BL_GRN no pull-up
-    10 [1] PB_10_LCD_BL_RED no pull-up
-    09 [1] PB_09_LCD_RST no pull-up
-    08 [0] PB_08_TP62 pull-up enabled
-
-    07 [0] PB_07_TP60 pull-up enabled
-    06 [1] PB_06_TP58 no pull-up enabled
-    05 [0] PB_05_TP56 pull-up enabled
-    04 [1] PB_04_BLADE_AN1 no pull-up
-
-    03 [1] PB_03_BLADE_AN0 no pull-up
-    02 [1] PB_02_BUTTON3 no pull-up
-    01 [1] PB_01_BUTTON2 no pull-up
-    00 [1] PB_00_BUTTON1 no pull-up
 */
 
 /* PIO Pull Up Enable Register
@@ -1872,52 +1417,52 @@ Tdiv_slclk = 2*(DIV+1)*Tslow_clock.
 
 /* PIO Output Write Enable Register
 0: No effect
-1: Enables writing PIO_ODSR for the I/O line.
+1: Enables writing PIO_ODSR directly for the I/O line.
 */
-#define PIOA_OWER_INIT (u32)0xB4010000
+#define PIOA_OWER_INIT (u32)0x00000000
 /* 
-    31 [1] PA_31_HEARTBEAT write enabled
-    30 [0] PA_30_AN_DEMO
-    29 [1] PA_29_BUZZER2 write enabled
-    28 [1] PA_28_BUZZER1 write enabled
+    31 [0] PA_31_HEARTBEAT write ODSR disabled
+    30 [0] PA_30_AN_DEMO write ODSR disabled
+    29 [0] PA_29_BUZZER2 write ODSR disabled
+    28 [0] PA_28_BUZZER1 write ODSR disabled
 
-    27 [0] PA_27_CLOCK_OUT
-    26 [1] PA_26_ANT_PWR_EN write enabled
-    25 [0] PA_25_ANT_USPI2_SCK
-    24 [0] PA_24_SD_USPI1_SCK
+    27 [0] PA_27_CLOCK_OUT write ODSR disabled
+    26 [0] PA_26_ANT_PWR_EN write ODSR disabled
+    25 [0] PA_25_ANT_USPI2_SCK write ODSR disabled
+    24 [0] PA_24_SD_USPI1_SCK write ODSR disabled
 
-    23 [0] PA_23_ANT_USPI2_MOSI
-    22 [0] PA_22_ANT_USPI2_MISO
-    21 [0] PA_21_SD_USPI1_MISO
-    20 [0] PA_20_SD_USPI1_MOSI
+    23 [0] PA_23_ANT_USPI2_MOSI write ODSR disabled
+    22 [0] PA_22_ANT_USPI2_MISO write ODSR disabled
+    21 [0] PA_21_SD_USPI1_MISO write ODSR disabled
+    20 [0] PA_20_SD_USPI1_MOSI write ODSR disabled
 
-    19 [0] PA_19_DEBUG_U0_PIMO
-    18 [0] PA_18_DEBUG_U0_POMI
-    17 [0] PA_17_BUTTON0
-    16 [1] PA_16_BLADE_CS write enabled
+    19 [0] PA_19_DEBUG_U0_PIMO write ODSR disabled
+    18 [0] PA_18_DEBUG_U0_POMI write ODSR disabled
+    17 [0] PA_17_BUTTON0 write ODSR disabled
+    16 [0] PA_16_BLADE_CS write ODSR disabled
 
-    15 [0] PA_15_BLADE_SCK
-    14 [0] PA_14_BLADE_MOSI
-    13 [0] PA_13_BLADE_MISO
-    12 [0] PA_12_BLADE_UPOMI
+    15 [0] PA_15_BLADE_SCK write ODSR disabled
+    14 [0] PA_14_BLADE_MOSI write ODSR disabled
+    13 [0] PA_13_BLADE_MISO write ODSR disabled
+    12 [0] PA_12_BLADE_UPOMI write ODSR disabled
 
-    11 [0] PA_11_BLADE_UPIMO
-    10 [0] PA_10_I2C_SCL
-    09 [0] PA_09_I2C_SDA
-    08 [0] PA_08_SD_CS_MCDA3
+    11 [0] PA_11_BLADE_UPIMO write ODSR disabled
+    10 [0] PA_10_I2C_SCL write ODSR disabled
+    09 [0] PA_09_I2C_SDA write ODSR disabled
+    08 [0] PA_08_SD_CS_MCDA3 write ODSR disabled
 
-    07 [0] PA_07_HSMCI_MCDA2
-    06 [0] PA_06_HSMCI_MCDA1
-    05 [0] PA_05_HSMCI_MCDA0
-    04 [0] PA_04_HSMCI_MCCDA
+    07 [0] PA_07_HSMCI_MCDA2 write ODSR disabled
+    06 [0] PA_06_HSMCI_MCDA1 write ODSR disabled
+    05 [0] PA_05_HSMCI_MCDA0 write ODSR disabled
+    04 [0] PA_04_HSMCI_MCCDA write ODSR disabled
 
-    03 [0] PA_03_HSMCI_MCCK
-    02 [0] PA_02_SD_DETECT
-    01 [0] PA_01_SD_WP
-    00 [0] PA_00_TP54
+    03 [0] PA_03_HSMCI_MCCK write ODSR disabled
+    02 [0] PA_02_SD_DETECT write ODSR disabled
+    01 [0] PA_01_SD_WP write ODSR disabled
+    00 [0] PA_00_TP54 write ODSR disabled
 */
 
-#define PIOB_OWER_INIT (u32)0x01FFFE0
+#define PIOB_OWER_INIT (u32)0x001FFC00
 /*
     31 [0] PB_31_
     30 [0] PB_30_
@@ -1927,128 +1472,37 @@ Tdiv_slclk = 2*(DIV+1)*Tslow_clock.
     27 [0] PB_27_
     26 [0] PB_26_
     25 [0] PB_25_
-    24 [1] PB_24_ANT_SRDY write enabled
+    24 [0] PB_24_ANT_SRDY write ODSR disabled
 
-    23 [1] PB_23_ANT_MRDY write enabled
-    22 [1] PB_22_ANT_USPI2_CS write enabled
-    21 [1] PB_21_ANT_RESET write enabled
-    20 [1] PB_20_LED_RED write enabled
+    23 [0] PB_23_ANT_MRDY write ODSR disabled
+    22 [0] PB_22_ANT_USPI2_CS write ODSR disabled
+    21 [0] PB_21_ANT_RESET write ODSR disabled
+    20 [1] PB_20_LED_RED write ODSR enabled
 
-    19 [1] PB_19_LED_GRN write enabled
-    18 [1] PB_18_LED_BLU write enabled
-    17 [1] PB_17_LED_YLW write enabled
-    16 [1] PB_16_LED_CYN write enabled
+    19 [1] PB_19_LED_GRN write ODSR enabled
+    18 [1] PB_18_LED_BLU write ODSR enabled
+    17 [1] PB_17_LED_YLW write ODSR enabled
+    16 [1] PB_16_LED_CYN write ODSR enabled
 
-    15 [1] PB_15_LED_ORG write enabled
-    14 [1] PB_14_LED_PRP write enabled
-    13 [1] PB_13_LED_WHT write enabled
-    12 [1] PB_12_LCD_BL_BLU write enabled
+    15 [1] PB_15_LED_ORG write ODSR enabled
+    14 [1] PB_14_LED_PRP write ODSR enabled
+    13 [1] PB_13_LED_WHT write ODSR enabled
+    12 [1] PB_12_LCD_BL_BLU write ODSR enabled
 
-    11 [1] PB_11_LCD_BL_GRN write enabled
-    10 [1] PB_10_LCD_BL_RED write enabled
-    09 [1] PB_09_LCD_RST write enabled
-    08 [0] PB_08_TP62
+    11 [1] PB_11_LCD_BL_GRN write ODSR enabled
+    10 [1] PB_10_LCD_BL_RED write ODSR enabled
+    09 [0] PB_09_LCD_RST write ODSR disabled
+    08 [0] PB_08_TP62 write ODSR disabled
 
-    07 [0] PB_07_TP60
-    06 [0] PB_06_TP58
-    05 [0] PB_05_TP56
-    04 [0] PB_04_BLADE_AN1
+    07 [0] PB_07_TP60 write ODSR disabled
+    06 [0] PB_06_TP58 write ODSR disabled
+    05 [0] PB_05_TP56 write ODSR disabled
+    04 [0] PB_04_BLADE_AN1 write ODSR disabled
 
-    03 [0] PB_03_BLADE_AN0
-    02 [0] PB_02_BUTTON3
-    01 [0] PB_01_BUTTON2
-    00 [0] PB_00_BUTTON1
-*/
-
-/* PIO Output Write Disable Register
-0: No effect
-1: Disables writing PIO_ODSR for the I/O line.
-For now, don't worry about explictly disabling any write capability.
-*/
-#define PIOA_OWDR_INIT (u32)0x000000000
-/* 
-    31 [0] PA_31_HEARTBEAT
-    30 [0] PA_30_AN_DEMO
-    29 [0] PA_29_BUZZER2
-    28 [0] PA_28_BUZZER1
-
-    27 [0] PA_27_CLOCK_OUT
-    26 [0] PA_26_ANT_PWR_EN
-    25 [0] PA_25_ANT_USPI2_SCK
-    24 [0] PA_24_SD_USPI1_SCK
-
-    23 [0] PA_23_ANT_USPI2_MOSI
-    22 [0] PA_22_ANT_USPI2_MISO
-    21 [0] PA_21_SD_USPI1_MISO
-    20 [0] PA_20_SD_USPI1_MOSI
-
-    19 [0] PA_19_DEBUG_U0_PIMO
-    18 [0] PA_18_DEBUG_U0_POMI
-    17 [0] PA_17_BUTTON0
-    16 [0] PA_16_BLADE_CS
-
-    15 [0] PA_15_BLADE_SCK
-    14 [0] PA_14_BLADE_MOSI
-    13 [0] PA_13_BLADE_MISO
-    12 [0] PA_12_BLADE_UPOMI
-
-    11 [0] PA_11_BLADE_UPIMO
-    10 [0] PA_10_I2C_SCL
-    09 [0] PA_09_I2C_SDA
-    08 [0] PA_08_SD_CS_MCDA3
-
-    07 [0] PA_07_HSMCI_MCDA2
-    06 [0] PA_06_HSMCI_MCDA1
-    05 [0] PA_05_HSMCI_MCDA0
-    04 [0] PA_04_HSMCI_MCCDA
-
-    03 [0] PA_03_HSMCI_MCCK
-    02 [0] PA_02_SD_DETECT
-    01 [0] PA_01_SD_WP
-    00 [0] PA_00_TP54
-*/
-
-#define PIOB_OWDR_INIT (u32)0x00000000
-/*
-    31 [0] PB_31_
-    30 [0] PB_30_
-    29 [0] PB_29_
-    28 [0] PB_28_
-
-    27 [0] PB_27_
-    26 [0] PB_26_
-    25 [0] PB_25_
-    24 [0] PB_24_ANT_SRDY
-
-    23 [0] PB_23_ANT_MRDY
-    22 [0] PB_22_ANT_USPI2_CS
-    21 [0] PB_21_ANT_RESET
-    20 [0] PB_20_LED_RED
-
-    19 [0] PB_19_LED_GRN
-    18 [0] PB_18_LED_BLU
-    17 [0] PB_17_LED_YLW
-    16 [0] PB_16_LED_CYN
-
-    15 [0] PB_15_LED_ORG
-    14 [0] PB_14_LED_PRP
-    13 [0] PB_13_LED_WHT
-    12 [0] PB_12_LCD_BL_BLU
-
-    11 [0] PB_11_LCD_BL_GRN
-    10 [0] PB_10_LCD_BL_RED
-    09 [0] PB_09_LCD_RST
-    08 [0] PB_08_TP62
-
-    07 [0] PB_07_TP60
-    06 [0] PB_06_TP58
-    05 [0] PB_05_TP56
-    04 [0] PB_04_BLADE_AN1
-
-    03 [0] PB_03_BLADE_AN0
-    02 [0] PB_02_BUTTON3
-    01 [0] PB_01_BUTTON2
-    00 [0] PB_00_BUTTON1
+    03 [0] PB_03_BLADE_AN0 write ODSR disabled
+    02 [0] PB_02_BUTTON3 write ODSR disabled
+    01 [0] PB_01_BUTTON2 write ODSR disabled
+    00 [0] PB_00_BUTTON1 write ODSR disabled
 */
 
 /* PIO Write Protect Mode Register PIO_WPMR
@@ -2288,5 +1742,15 @@ In general, the period is 6000000 / frequency and duty is always period / 2.
     00 [0] 
 */
 
+/*! @endcond */
+
 
 #endif /* __EIEF1 */
+
+
+
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+/* End of File                                                                                                        */
+/*--------------------------------------------------------------------------------------------------------------------*/
+
