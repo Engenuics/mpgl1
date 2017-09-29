@@ -50,9 +50,8 @@ Promises:
 */
 void InterruptSetup(void)
 {
-  u32 au32PriorityConfig[PRIORITY_REGISTERS] = {IPR0_INIT, IPR1_INIT, IPR2_INIT, 
-                                                IPR3_INIT, IPR4_INIT, IPR5_INIT,
-                                                IPR6_INIT, IPR7_INIT};
+  u32 au32PriorityConfig[PRIORITY_REGISTERS] = {IPR0_INIT, IPR1_INIT, IPR2_INIT, IPR3_INIT, IPR4_INIT,
+                                                IPR5_INIT, IPR6_INIT, IPR7_INIT};
   
   /* Set interrupt priorities */
   for(u8 i = 0; i < PRIORITY_REGISTERS; i++)
@@ -87,7 +86,7 @@ Promises:
 */
 void HardFault_Handler(void)
 {
-#ifdef EIE1
+#ifdef MPGL1
   LedOff(WHITE);
   LedOff(CYAN);
   LedOff(PURPLE);
@@ -96,7 +95,7 @@ void HardFault_Handler(void)
   LedOff(GREEN);
   LedOff(YELLOW);
   LedOn(RED);
-#endif /* EIE1 */
+#endif /* MPGL1 */
 
   
 #ifdef MPGL2
@@ -176,15 +175,13 @@ Promises:
 */
 void PIOA_IrqHandler(void)
 {
-  u32 u32GPIOInterruptSources;
-  u32 u32ButtonInterrupts;
-  u32 u32CurrentButtonLocation;
+  u32 u32GPIOInterruptSources, u32ButtonInterrupts, u32CurrentButtonLocation;
 
   /* Grab a snapshot of the current PORTA status flags (clears all flags) */
   u32GPIOInterruptSources  = AT91C_BASE_PIOA->PIO_ISR;
 
   /******** DO NOT set a breakpoint before this line of the ISR because the debugger
-  will "read" PIO_ISR and clear the flags. ********/
+  will "read" PIO_ISR and clear the flags. ******/
   
   /* Examine button interrupts */
   u32ButtonInterrupts = u32GPIOInterruptSources & GPIOA_BUTTONS;
@@ -233,14 +230,13 @@ Promises:
 void PIOB_IrqHandler(void)
 {
   u32 u32GPIOInterruptSources;
-  u32 u32ButtonInterrupts;
-  u32 u32CurrentButtonLocation;
+  u32 u32ButtonInterrupts, u32CurrentButtonLocation;
 
   /* Grab a snapshot of the current PORTB status flags (clears all flags) */
   u32GPIOInterruptSources  = AT91C_BASE_PIOB->PIO_ISR;
 
   /******** DO NOT set a breakpoint before this line of the ISR because the debugger
-  will "read" PIO_ISR and clear the flags. ********/
+  will "read" PIO_ISR and clear the flags. ******/
   
   /* Parse interrupts */
   u32ButtonInterrupts = u32GPIOInterruptSources & GPIOB_BUTTONS;
@@ -266,8 +262,7 @@ void PIOB_IrqHandler(void)
   } /* end button interrupt checking */
 
   /* Clear the PIOB pending flag and exit */
-  //NVIC->ICPR[0] = (1 << IRQn_PIOB);
-  NVIC_ClearPendingIRQ(IRQn_PIOB);
+  NVIC->ICPR[0] = (1 << IRQn_PIOB);
   
 } /* end PIOB_IrqHandler() */
 

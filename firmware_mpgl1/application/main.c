@@ -2,7 +2,7 @@
 File: main.c                                                                
 
 Description:
-Container for the EiE firmware.  
+Container for the MPG firmware.  
 ***********************************************************************************************************************/
 
 #include "configuration.h"
@@ -42,9 +42,10 @@ the 1ms period.
 void main(void)
 {
   G_u32SystemFlags |= _SYSTEM_INITIALIZING;
+  // Check for watch dog restarts
 
   /* Low level initialization */
-  WatchDogSetup(); /* During development, does not reset processor if timeout */
+  WatchDogSetup(); /* During development, set to not reset processor if timeout */
   GpioSetup();
   ClockSetup();
   InterruptSetup();
@@ -57,29 +58,24 @@ void main(void)
 
   /* Debug messages through DebugPrintf() are available from here */
 
-  TimerInitialize();  
   SspInitialize();
   TWIInitialize();
-  Adc12Initialize();
-  
+
   LcdInitialize();
   LedInitialize();
   ButtonInitialize();
   AntInitialize();
-  AntApiInitialize();
   SdCardInitialize();
 
   /* Application initialization */
-
-  UserApp1Initialize();
-  UserApp2Initialize();
-  UserApp3Initialize();
-
+//  BoardTestInitialize();
+//  AudioTestInitialize();
+    UserAppInitialize();
   
   /* Exit initialization */
   SystemStatusReport();
   G_u32SystemFlags &= ~_SYSTEM_INITIALIZING;
-    
+  
   /* Super loop */  
   while(1)
   {
@@ -89,21 +85,18 @@ void main(void)
     LedUpdate();
     ButtonRunActiveState();
     UartRunActiveState();
-    TimerRunActiveState(); 
     SspRunActiveState();
     TWIRunActiveState();
-    Adc12RunActiveState();
     MessagingRunActiveState();
     DebugRunActiveState();
     LcdRunActiveState();
     AntRunActiveState();
-    AntApiRunActiveState();
     SdCardRunActiveState();
 
     /* Applications */
-    UserApp1RunActiveState();
-    UserApp2RunActiveState();
-    UserApp3RunActiveState();
+    //BoardTestRunActiveState();
+    //AudioTestRunActiveState();
+    UserAppRunActiveState();
     
     /* System sleep*/
     HEARTBEAT_OFF();
