@@ -14,7 +14,7 @@
 //  Atmel's name may not be used to endorse or promote products derived from
 //  this software without specific prior written permission. 
 //  
-//  DISCLAIMER:  THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
+//  DISCLAIMER:  THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY 
 //  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
 //  DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
@@ -1215,12 +1215,12 @@ typedef struct _AT91S_NVIC {
 #define AT91C_NVIC_ID_PFR0_0  (0xF <<  0) // (NVIC) State0 (T-bit == 0)
 #define AT91C_NVIC_ID_PRF0_1  (0xF <<  4) // (NVIC) State1 (T-bit == 1)
 // -------- NVIC_PFR1 : (NVIC Offset: 0xd44) Processor Feature register1 (ID_PFR1) -------- 
-#define AT91C_NVIC_ID_PRF1_MODEL (0xF <<  8) // (NVIC) Microcontroller programmer’s model
+#define AT91C_NVIC_ID_PRF1_MODEL (0xF <<  8) // (NVIC) Microcontroller programmerÂ’s model
 // -------- NVIC_DFR0 : (NVIC Offset: 0xd48) Debug Feature register0 (ID_DFR0) -------- 
-#define AT91C_NVIC_ID_DFR0_MODEL (0xF << 20) // (NVIC) Microcontroller Debug Model – memory mapped
+#define AT91C_NVIC_ID_DFR0_MODEL (0xF << 20) // (NVIC) Microcontroller Debug Model Â– memory mapped
 // -------- NVIC_MMFR0 : (NVIC Offset: 0xd50) Memory Model Feature register0 (ID_MMFR0) -------- 
-#define AT91C_NVIC_ID_MMFR0_PMSA (0xF <<  4) // (NVIC) Microcontroller Debug Model – memory mapped
-#define AT91C_NVIC_ID_MMFR0_CACHE (0xF <<  8) // (NVIC) Microcontroller Debug Model – memory mapped
+#define AT91C_NVIC_ID_MMFR0_PMSA (0xF <<  4) // (NVIC) Microcontroller Debug Model Â– memory mapped
+#define AT91C_NVIC_ID_MMFR0_CACHE (0xF <<  8) // (NVIC) Microcontroller Debug Model Â– memory mapped
 
 // *****************************************************************************
 //              SOFTWARE API DEFINITION  FOR NESTED vector Interrupt Controller
