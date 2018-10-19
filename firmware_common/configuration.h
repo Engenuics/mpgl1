@@ -294,7 +294,7 @@ the board-specific definition header file in section !!!!! GPIO pin names
 #endif /* EIE1 */
 
 #ifdef MPGL2
-#define   ADC_CHANNEL_ARRAY   {ADC12_BLADE_AN0, ADC12_BLADE_AN1}
+#define   ADC_CHANNEL_ARRAY   {ADC12_CH2, ADC12_CH3}
 #endif /* MPGL2 */
 
 /*----------------------------------------------------------------------------------------------------------------------

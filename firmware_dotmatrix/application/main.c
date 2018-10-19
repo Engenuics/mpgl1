@@ -64,6 +64,8 @@ void main(void)
   LcdInitialize();
   LedInitialize();
   ButtonInitialize();
+  TimerInitialize();
+  Adc12Initialize();
    
   CapTouchInitialize();
   AntInitialize();

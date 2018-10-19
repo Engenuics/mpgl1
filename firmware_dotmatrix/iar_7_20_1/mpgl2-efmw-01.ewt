@@ -214,6 +214,9 @@
     <group>
       <name>Include</name>
       <file>
+        <name>$PROJ_DIR$\..\..\firmware_common\drivers\adc12.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\firmware_common\drivers\ant.h</name>
       </file>
       <file>
@@ -259,11 +262,17 @@
         <name>$PROJ_DIR$\..\..\firmware_common\drivers\sam3u_uart.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\firmware_common\drivers\timer.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\firmware_common\drivers\utilities.h</name>
       </file>
     </group>
     <group>
       <name>Source</name>
+      <file>
+        <name>$PROJ_DIR$\..\..\firmware_common\drivers\adc12.c</name>
+      </file>
       <file>
         <name>$PROJ_DIR$\..\..\firmware_common\drivers\ant.c</name>
       </file>
@@ -302,6 +311,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\firmware_common\drivers\sam3u_uart.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\firmware_common\drivers\timer.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\firmware_common\drivers\utilities.c</name>
