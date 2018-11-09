@@ -51,7 +51,7 @@ extern volatile u32 G_u32ApplicationFlags;             /* From main.c */
 
 extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
 extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
-
+int HLightOn = 0;
 
 /***********************************************************************************************************************
 Global variable definitions with scope limited to this local application.
@@ -87,7 +87,7 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
- 
+  HEARTBEAT_OFF();
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -136,7 +136,19 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
-
+  if (HLightOn == 1000)
+  {
+    HEARTBEAT_ON();
+    HLightOn = 0;
+  }
+  else if (HLightOn == 500)
+  {
+      HEARTBEAT_OFF();
+      HLightOn++;
+  } else 
+  {
+    HLightOn++;
+  }
 } /* end UserApp1SM_Idle() */
     
 

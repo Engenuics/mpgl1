@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-462333518
+Checksum=-1034135356
 [JLinkDriver]
 CStepIntDis=_ 0
 WatchCond=_ 0
@@ -43,13 +43,23 @@ UnspecRange=1
 ActionState=1
 [CodeCoverage]
 Enabled=_ 0
+[Trace1]
+Enabled=0
+ShowSource=1
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\application\mpgl1_board_test.c}.382.5" 0 0 1 "" 0 "" 0
+Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\firmware_mpg_common\drivers\interrupts.c}.273.1" 0 0 1 "" 0 "" 0
+Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\firmware_mpg_common\application\user_app.c}.94.5" 0 0 1 "" 0 "" 0
+Count=3
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
+[Aliases]
+Count=0
+SuppressDialog=0
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
@@ -58,13 +68,6 @@ Mode=1
 Graph=0
 Symbiont=0
 Exclusions=
-[Disassemble mode]
-mode=0
-[Breakpoints2]
-Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\application\mpgl1_board_test.c}.382.5" 0 0 1 "" 0 "" 0
-Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\firmware_mpg_common\drivers\interrupts.c}.273.1" 0 0 1 "" 0 "" 0
-Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\firmware_mpg_common\application\user_app.c}.94.5" 0 0 1 "" 0 "" 0
-Count=3
-[Aliases]
-Count=0
-SuppressDialog=0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
