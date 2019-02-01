@@ -64,9 +64,10 @@ void main(void)
   LcdInitialize();
   LedInitialize();
   ButtonInitialize();
-   
+
   CapTouchInitialize();
   AntInitialize();
+  AntApiInitialize();
   
   /* Application initialization */
   UserApp1Initialize();
@@ -93,6 +94,7 @@ void main(void)
     DebugRunActiveState();
     LcdRunActiveState();
     AntRunActiveState();
+    AntApiRunActiveState();
 
     /* Applications */
     UserApp1RunActiveState();
